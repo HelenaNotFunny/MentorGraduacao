@@ -11,16 +11,17 @@ Repositório de exemplo para as atividades da disciplina de Engenharia de Softwa
 
 ## Sobre o Projeto
 
-### Título
-Título do Projeto
+### Mentor de Graduação
+O projeto se chama Mentor de Graduação
 
 ### Descrição
-Descrição do seu projeto.
+Software para planejar o fluxo da sua graduação. Com base no fluxo ideal do curso e nos pré-requisitos, o software mostraria as disciplinas mais vantajosas de pagar naquele semestre. Podendo também ter acesso a informações de livros e da ementa das matérias.
 
 ### Componentes
-- Aluno(a) 1
-- Aluno(a) 2
-- Aluno(a) 3
+- Maria Helena Fernandes Leocádio
+- Rodrigo de Menezes Souza
+- Thaís Karolyne Militão De Lima
+- Williane Ferreira Cardoso
 
 ## Como clonar ou baixar
 
