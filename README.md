@@ -11,9 +11,6 @@ Repositório de exemplo para as atividades da disciplina de Engenharia de Softwa
 
 ## Sobre o Projeto
 
-### Mentor de Graduação
-O projeto se chama Mentor de Graduação
-
 ### Descrição
 Software para planejar o fluxo da sua graduação. Com base no fluxo ideal do curso e nos pré-requisitos, o software mostraria as disciplinas mais vantajosas de pagar naquele semestre. Podendo também ter acesso a informações de livros e da ementa das matérias.
 
@@ -30,7 +27,7 @@ Você pode obter este repositório de três formas:
 ### Clonar via HTTPS
 
 ```bash
-git clone https://github.com/mvapedrosa/Eng-de-Software-UFRN.git
+git clone https://github.com/HelenaNotFunny/MentorGraduacao.git
 ```
 
 Isso criará uma cópia local do repositório em sua máquina.
@@ -40,7 +37,7 @@ Isso criará uma cópia local do repositório em sua máquina.
 Se você já configurou sua chave SSH no GitHub, pode clonar usando:
 
 ```bash
-git clone git@github.com:mvapedrosa/Eng-de-Software-UFRN.git
+git clone git@github.com:HelenaNotFunny/MentorGraduacao.git
 ```
 
 Isso criará uma cópia local do repositório em sua máquina.
@@ -48,7 +45,7 @@ Isso criará uma cópia local do repositório em sua máquina.
 ### Baixar como ZIP
 
 1. Acesse a página do repositório no GitHub:
-   [https://github.com/mvapedrosa/Eng-de-Software-UFRN](https://github.com/mvapedrosa/Eng-de-Software-UFRN)
+   [https://github.com/HelenaNotFunny/MentorGraduacao](https://github.com/HelenaNotFunny/MentorGraduacao)
 2. Clique no botão **Code** (verde).
 3. Selecione **Download ZIP**.
 4. Extraia o arquivo ZIP para o local desejado em seu computador.
@@ -62,16 +59,12 @@ Isso criará uma cópia local do repositório em sua máquina.
 Eng-de-Software-UFRN/
 ├── LICENSE
 ├── README.md
-├── <diretório-x>/
-├── <diretório-y>/
-└── <diretório-z>/
+├── UserStories.md
 ```
 
 - LICENSE: termos da licença do projeto (MIT).
 - README.md: este arquivo de apresentação.
-- X: descrição do diretório X.
-- Y: descrição do diretório Y.
-- Z: descrição do diretório Z.
+- UserStories.md: Arquivo que define requisitos basicos de funcionalidade da aplicação.
 
 ## Licença
 
