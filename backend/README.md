@@ -32,6 +32,12 @@ Servidor em `http://localhost:8000`. Docs interativas em `http://localhost:8000/
 | POST | `/auth/login` | Login (retorna JWT) |
 | GET | `/auth/me` | Dados do usuário logado |
 
+## Seeds
+
+```bash
+python seeds/seed.py
+```
+
 ## Migrations
 
 ```bash

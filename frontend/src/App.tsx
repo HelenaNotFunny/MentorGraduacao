@@ -4,6 +4,9 @@ import { Header } from "./components/Header";
 import { Courses } from "./pages/Courses";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
+import { SubjectCreate } from "./pages/SubjectCreate";
+import { SubjectDetail } from "./pages/SubjectDetail";
+import { Subjects } from "./pages/Subjects";
 import { auth, User } from "./services/auth";
 
 export default function App() {
@@ -22,6 +25,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login onLogin={() => auth.me().then(setUser)} />} />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/subjects" element={<Subjects />} />
+        <Route path="/subjects/new" element={<SubjectCreate />} />
+        <Route path="/subjects/:id" element={<SubjectDetail />} />
       </Routes>
     </BrowserRouter>
   );

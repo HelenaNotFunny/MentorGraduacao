@@ -11,6 +11,9 @@ export function Home() {
         <button style={styles.button} onClick={() => navigate("/courses")}>
           Gerenciar Cursos
         </button>
+        <button style={styles.button} onClick={() => navigate("/subjects")}>
+          Ver Disciplinas
+        </button>
       </div>
     </div>
   );

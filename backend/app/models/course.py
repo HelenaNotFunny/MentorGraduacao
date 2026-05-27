@@ -12,3 +12,4 @@ class Course(Base):
     instituicao: Mapped[str] = mapped_column(String(200), nullable=False)
 
     users = relationship("User", back_populates="curso")
+    subjects = relationship("Subject", back_populates="course")
