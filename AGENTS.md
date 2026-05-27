@@ -50,11 +50,16 @@ npm run build                   # produção em dist/
 | GET | `/subjects/` | — |
 | GET | `/subjects/{id}` | — |
 | POST | `/subjects/` | — |
+| GET | `/flowchart/` | Bearer |
+| POST | `/flowchart/` | Bearer |
+| PUT | `/flowchart/{id}` | Bearer |
+| DELETE | `/flowchart/{id}` | Bearer |
+| GET | `/flowchart/suggestions` | Bearer |
 | GET | `/health` | — |
 
 ## Estrutura atual
 
-Sprint 2 implementada (autenticação + cadastro de curso + estrutura curricular). Próximas sprints no `plan.md`.
+Sprint 3 implementada (autenticação + cadastro de curso + estrutura curricular + fluxograma). Próximas sprints no `plan.md`.
 
 ## Convenções
 

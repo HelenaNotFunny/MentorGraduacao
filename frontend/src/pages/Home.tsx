@@ -14,6 +14,9 @@ export function Home() {
         <button style={styles.button} onClick={() => navigate("/subjects")}>
           Ver Disciplinas
         </button>
+        <button style={styles.button} onClick={() => navigate("/flowchart")}>
+          Meu Fluxograma
+        </button>
       </div>
     </div>
   );

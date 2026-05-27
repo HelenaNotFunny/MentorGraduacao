@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import { Courses } from "./pages/Courses";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
+import { Flowchart } from "./pages/Flowchart";
 import { SubjectCreate } from "./pages/SubjectCreate";
 import { SubjectDetail } from "./pages/SubjectDetail";
 import { Subjects } from "./pages/Subjects";
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login onLogin={() => auth.me().then(setUser)} />} />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/flowchart" element={<Flowchart />} />
         <Route path="/subjects" element={<Subjects />} />
         <Route path="/subjects/new" element={<SubjectCreate />} />
         <Route path="/subjects/:id" element={<SubjectDetail />} />
