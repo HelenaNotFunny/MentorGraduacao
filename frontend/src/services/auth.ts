@@ -12,6 +12,14 @@ export interface Token {
   token_type: string;
 }
 
+function decodificarToken(token: string): { sub: string } | null {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch {
+    return null;
+  }
+}
+
 export const auth = {
   register: (data: { nome: string; email: string; senha: string; curso_id?: number }) =>
     api.post<User>("/auth/register", data),
@@ -26,4 +34,11 @@ export const auth = {
   getToken: () => localStorage.getItem("token"),
 
   isAuthenticated: () => !!localStorage.getItem("token"),
+
+  getUserId: (): number | null => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    const payload = decodificarToken(token);
+    return payload ? Number(payload.sub) : null;
+  },
 };

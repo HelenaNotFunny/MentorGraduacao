@@ -55,11 +55,13 @@ npm run build                   # produção em dist/
 | PUT | `/flowchart/{id}` | Bearer |
 | DELETE | `/flowchart/{id}` | Bearer |
 | GET | `/flowchart/suggestions` | Bearer |
+| GET | `/subjects/{id}/reviews` | — |
+| POST | `/subjects/{id}/reviews` | Bearer |
 | GET | `/health` | — |
 
 ## Estrutura atual
 
-Sprint 3 implementada (autenticação + cadastro de curso + estrutura curricular + fluxograma). Próximas sprints no `plan.md`.
+Sprint 4 implementada (autenticação + cadastro de curso + estrutura curricular + fluxograma + avaliações).
 
 ## Convenções
 
