@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # --- BACKEND (FastAPI + SQLite) ---
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mentor_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      # O volume espelha sua pasta local. O arquivo SQLite criado dentro do container
+      # aparecerá na sua pasta 'backend/' física, garantindo a persistência dos dados.
+      - ./backend:/app
+    environment:
+      - DATABASE_URL=sqlite:///./mentor.db # Garanta que seu config.py leia essa var
+      - JWT_SECRET=sua_chave_secreta_aqui # Exemplo de var para o seu serviço de JWT
+    # Se precisar rodar comandos automáticos antes de iniciar, você pode usar o comando abaixo,
+    # mas o ideal para dev é rodar manualmente no primeiro boot (veja abaixo).
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # --- FRONTEND (Vite + React) ---
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mentor_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Protege os pacotes instalados no container
+    depends_on:
+      - backend
