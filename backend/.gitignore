@@ -1,0 +1,12 @@
+node_modules/
+dist/
+
+.venv/
+env/
+ENV/
+.coverage
+htmlcov/
+
+
+__pycache__/
+*.pycgit status
