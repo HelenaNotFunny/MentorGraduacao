@@ -76,10 +76,24 @@ MentorGraduacao/
 
 ### Backend
 
+#### Linux
+
 ```bash
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
+pip install -r requirements.txt
+alembic upgrade head
+python seeds/seed.py
+uvicorn app.main:app --reload
+```
+
+#### Windows
+
+```bash
+cd backend
+python3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 alembic upgrade head
 python seeds/seed.py
