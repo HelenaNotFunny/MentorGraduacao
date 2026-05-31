@@ -12,7 +12,7 @@ export function Header({ user, onLogout }: HeaderProps) {
   return (
     <header style={styles.header}>
       <h1 style={styles.title} onClick={() => navigate("/")}>
-        Mentor Graduação
+        Mentor de Graduação
       </h1>
       {user ? (
         <div style={styles.userArea}>
@@ -38,17 +38,29 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0.75rem 1.5rem",
-    background: "#1a73e8",
-    color: "#fff",
+    background: "#ffffff",
+    borderBottom: "1px solid #e2e8f0",
+    fontFamily: "'Segoe UI'",
+    color: "#1a202c",
   },
-  title: { cursor: "pointer", margin: 0, fontSize: "1.25rem" },
+  title: { 
+    margin: 0, 
+    cursor: "pointer",
+    fontFamily: "Segoe UI",
+    fontSize: "1.35rem",
+    fontWeight: 700, 
+    background: "#3182ce", 
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent", 
+  },
   userArea: { display: "flex", alignItems: "center", gap: "0.75rem" },
   button: {
-    background: "#fff",
-    color: "#1a73e8",
+    background: "#3182ce",
+    color: "#ffffff",
     border: "none",
+    fontSize: "0.85rem",
     padding: "0.35rem 0.75rem",
-    borderRadius: 4,
+    borderRadius: 25,
     cursor: "pointer",
     fontWeight: 600,
   },
