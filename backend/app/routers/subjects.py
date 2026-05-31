@@ -47,21 +47,3 @@ def create_subject(body: SubjectCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(subject)
     return subject
-
-@router.get("/{subject_id}/prerequisites", response_model=list[SubjectOut])
-def list_subject_prerequisites(subject_id: int, db: Session = Depends(get_db)):
-    subject_exists = db.query(Subject).filter(Subject.id == subject_id).first()
-    if not subject_exists:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
-            detail="Disciplina principal não encontrada"
-        )
-
-    prerequisites = (
-        db.query(Subject)
-        .join(Prerequisite, Subject.id == Prerequisite.prerequisite_subject_id)
-        .filter(Prerequisite.subject_id == subject_id)
-        .all()
-    )
-    
-    return prerequisites

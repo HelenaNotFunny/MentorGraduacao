@@ -1,12 +1,8 @@
-.vscode/
-
 node_modules/
 dist/
 
 .venv/
 env/
-./backend/venv/
-
 ENV/
 .coverage
 htmlcov/
