@@ -4,7 +4,7 @@
 
 - **Backend:** FastAPI + SQLAlchemy + JWT + banco relacional (SQLite dev / PostgreSQL prod)
 - **Frontend:** React (SPA)
-- **Infra:** Docker (opcional), migrations via Alembic
+- **Infra:** migrations via Alembic
 
 ## Modelo de Dados
 
@@ -123,9 +123,3 @@ MentorGraduacao/
 2. **Sugestões:** disciplinas cujos pré-requisitos foram cumpridos e que ainda não estão no fluxograma
 3. **Avaliação:** apenas uma por disciplina por usuário; apenas se a disciplina estiver como `completed`
 4. **Admin:** cadastro de cursos e disciplinas (definir se qualquer usuário ou papel específico)
-
-## Pendências (definir antes da Sprint 1)
-
-- Duração da sprint (recomendação: 2 semanas)
-- Regra de admin (qualquer usuário cadastra disciplina ou só admin?)
-- Deploy ou apenas execução local

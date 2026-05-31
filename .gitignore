@@ -10,3 +10,5 @@ htmlcov/
 
 __pycache__/
 *.pycgit status
+
+.pytest_cache

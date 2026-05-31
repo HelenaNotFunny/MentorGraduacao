@@ -2,10 +2,6 @@
 
 Projeto acadêmico de Engenharia de Software (UFRN). Planejamento de fluxo de graduação.
 
-## Idioma
-
-Tudo em português: docs, commits, issues, branches, código (nomes de variáveis e funções).
-
 ## Stack
 
 - **Backend:** FastAPI + SQLAlchemy + Alembic + JWT + SQLite (dev)
