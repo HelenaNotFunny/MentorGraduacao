@@ -20,7 +20,6 @@ class SubjectCreate(BaseModel):
 
 class SubjectOut(BaseModel):
     id: int
-    course_id: int
     nome: str
     codigo: str
     ementa: str | None = None

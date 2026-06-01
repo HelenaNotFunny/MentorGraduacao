@@ -7,7 +7,7 @@ from app.config import settings
 from app.database import Base
 
 # Import models so Base.metadata is populated
-from app.models import course, flowchart, review, subject, user  # noqa: F401
+from app.models import course, course_subjects, flowchart, review, subject, user  # noqa: F401
 
 config = context.config
 

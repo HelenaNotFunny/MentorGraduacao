@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models.course_subjects import CourseSubjects
 from app.models.subject import Prerequisite, Subject
 from app.schemas.subject import SubjectCreate, SubjectOut
 
@@ -16,7 +17,7 @@ def list_subjects(
 ):
     query = db.query(Subject)
     if course_id:
-        query = query.filter(Subject.course_id == course_id)
+        query = query.join(CourseSubjects).filter(CourseSubjects.course_id == course_id)
     if search:
         query = query.filter(
             Subject.nome.ilike(f"%{search}%") | Subject.codigo.ilike(f"%{search}%")
@@ -35,7 +36,6 @@ def get_subject(subject_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=SubjectOut, status_code=status.HTTP_201_CREATED)
 def create_subject(body: SubjectCreate, db: Session = Depends(get_db)):
     subject = Subject(
-        course_id=body.course_id,
         nome=body.nome,
         codigo=body.codigo,
         ementa=body.ementa,
@@ -44,9 +44,13 @@ def create_subject(body: SubjectCreate, db: Session = Depends(get_db)):
         periodo_recomendado=body.periodo_recomendado,
     )
     db.add(subject)
+    db.flush()
+    cs = CourseSubjects(course_id=body.course_id, subject_id=subject.id)
+    db.add(cs)
     db.commit()
     db.refresh(subject)
     return subject
+
 
 @router.get("/{subject_id}/prerequisites", response_model=list[SubjectOut])
 def list_subject_prerequisites(subject_id: int, db: Session = Depends(get_db)):
