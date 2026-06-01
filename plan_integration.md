@@ -4,13 +4,13 @@ Migrar o banco de SQLite (dev) para MySQL rodando em Docker, usando `schema_ment
 
 ---
 
-## Fase 1 — Diretório `Database/` + Docker Compose
+## Fase 1 — Diretório `database/` + Docker Compose
 
-### 1.1 Criar `Database/` na raiz do repositório
+### 1.1 Criar `database/` na raiz do repositório
 
 ```
 MentorGraduacao/
-├── Database/
+├── database/
 │   ├── docker-compose.yml
 │   ├── schema_mentor_graduacao.sql
 │   └── dados.sql
@@ -19,15 +19,15 @@ MentorGraduacao/
 └── ...
 ```
 
-### 1.2 Mover `schema_mentor_graduacao.sql` e `dados.sql` para `Database/`
+### 1.2 Mover `schema_mentor_graduacao.sql` e `dados.sql` para `database/`
 
-Arquivos atualmente na raiz são movidos para `Database/`.
+Arquivos atualmente na raiz são movidos para `database/`.
 
 ### 1.3 Corrigir `schema_mentor_graduacao.sql`
 
 - `Review.nota`: `DECIMAL(2,1)` → `DECIMAL(3,1)` (suporta nota 0–10)
 
-### 1.4 Criar `Database/docker-compose.yml`
+### 1.4 Criar `database/docker-compose.yml`
 
 ```yaml
 services:
@@ -234,7 +234,7 @@ A nova migration criará todas as tabelas no schema definido pelos models.
 ## Fase 10 — Atualizar `AGENTS.md`
 
 Adicionar:
-- `docker compose up -d` na raiz do diretório `Database/` para subir MySQL
+- `docker compose up -d` na raiz do diretório `database/` para subir MySQL
 - Nota sobre `.env` obrigatório
 - Remover bugs corrigidos da lista
 - Adicionar nota sobre `DECIMAL(3,1)` para nota
@@ -244,7 +244,7 @@ Adicionar:
 ## Ordem de execução sugerida
 
 ```
- 1. Database/ + mover .sql + corrigir DECIMAL
+ 1. database/ + mover .sql + corrigir DECIMAL
  2. docker-compose.yml
  3. .env.example + .env
  4. Refatorar models (Course, User, Subject, CourseSubjects, Prerequisite, FlowchartItem, Review)

@@ -10,7 +10,7 @@ Projeto acadêmico de Engenharia de Software (UFRN). Planejamento de fluxo de gr
 ## Comandos
 
 ```bash
-# Docker MySQL (workdir: Database/)
+# Docker MySQL (workdir: database/)
 docker compose up -d
 
 # Backend (workdir: backend/)
@@ -37,12 +37,12 @@ npm run build                             # tsc && vite build (typecheck + bundl
 - Vite roteia `/api/*` → backend (rewrite: `/api` removido)
 - Uploads de comprovantes salvos em `backend/uploads/`
 - `db` session injetada via `get_db()` (FastAPI dependency)
-- Schema das tabelas definido em `Database/schema_mentor_graduacao.sql`
+- Schema das tabelas definido em `database/schema_mentor_graduacao.sql`
 
 ## Dados de exemplo
 
 `backend/seeds/seed.py` cria: curso "Ciência da Computação", admin (`admin@test.com` / `123456`), 13 disciplinas com 8 pré-requisitos.
-`Database/dados.sql` também pode ser usado como init do Docker MySQL.
+`database/dados.sql` também pode ser usado como init do Docker MySQL.
 
 ## Convenções
 
@@ -53,10 +53,10 @@ npm run build                             # tsc && vite build (typecheck + bundl
 ## Nuances
 
 - `npm run build` executa `tsc` (strict mode) antes do vite build — `noUnusedLocals` e `noUnusedParameters` ativos
-- `config.py` lê de `.env` (obrigatório) ou usa default para Docker MySQL (`Database/docker-compose.yml`)
+- `config.py` lê de `.env` (obrigatório) ou usa default para Docker MySQL (`database/docker-compose.yml`)
 - `seeds/seed.py` manipula `sys.path` para importar `app.*` — executar de dentro de `backend/`
 - Rota extra não documentada no README: `GET /subjects/{id}/prerequisites` (retorna lista de disciplinas pré-requisito)
-- Docker MySQL usa init scripts em `Database/schema_mentor_graduacao.sql` e `Database/dados.sql`
+- Docker MySQL usa init scripts em `database/schema_mentor_graduacao.sql` e `database/dados.sql`
 - `requirements.txt` usa intervalos flexíveis (`>=`) — sem versões fixas
 
 ## Schema do banco
