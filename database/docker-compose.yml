@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: mysql:8.0
+    image: dpdck972/mentor-mysql:latest
     container_name: mentor-mysql
     restart: unless-stopped
     ports:
@@ -12,8 +12,6 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mentor123}
     volumes:
       - mentor_mysql_data:/var/lib/mysql
-      - ./schema_mentor_graduacao.sql:/docker-entrypoint-initdb.d/01-schema.sql
-      - ./dados.sql:/docker-entrypoint-initdb.d/02-dados.sql
 
 volumes:
   mentor_mysql_data:
