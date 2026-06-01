@@ -261,6 +261,8 @@ erDiagram
 | POST | `/subjects/{id}/reviews` | Bearer | Avaliar disciplina |
 | GET | `/health` | — | Health check |
 
+> **Nota:** As grades curriculares dos cursos cadastrados no banco podem não refletir a versão mais recente da matriz curricular oficial da UFRN. Consulte o SIGAA para a grade atualizada de cada curso.
+
 ## Licença
 
 MIT

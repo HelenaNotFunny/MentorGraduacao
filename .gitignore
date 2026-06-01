@@ -15,3 +15,6 @@ __pycache__/
 
 # Environment
 .env
+
+# Data import
+/data/
