@@ -39,10 +39,35 @@ npm run build                             # tsc && vite build (typecheck + bundl
 - `db` session injetada via `get_db()` (FastAPI dependency)
 - Schema das tabelas definido em `database/schema_mentor_graduacao.sql`
 
-## Dados de exemplo
+## Dados
+
+### Grades curriculares reais da UFRN
+
+`data/` contém `cursos_ufrn.json` com 81 disciplinas, 61 pré-requisitos e 4 cursos baseados nas grades oficiais do SIGAA/UFRN:
+
+| Curso | Códigos | Disciplinas |
+|---|---|---|
+| Ciências e Tecnologia | ECT | 22 (1º ciclo) |
+| Engenharia de Computação | ECT + DIM + DCA | 45 (2º ciclo) |
+| Engenharia Mecatrônica | ECT + DCA + MEC | 36 (2º ciclo) |
+| Tecnologia da Informação (BTI) | IMD + DIM | 36 |
+
+`data/import_data.py` lê o JSON e popula o banco via SQLAlchemy (idempotente):
+```bash
+cd data
+python import_data.py          # usa o .venv do backend
+```
+
+> **Atenção:** `data/` está no `.gitignore` — o JSON e o script não sobem para o GitHub.
+
+### Docker Hub
+
+A imagem MySQL populada está publicada em `dpdck972/mentor-mysql:latest`. O `database/docker-compose.yml` já a referência em vez de `mysql:8.0`.
+Em outra máquina, `docker compose up -d` já vem com todos os dados.
+
+### Seed original
 
 `backend/seeds/seed.py` cria: curso "Ciência da Computação", admin (`admin@test.com` / `123456`), 13 disciplinas com 8 pré-requisitos.
-`database/dados.sql` também pode ser usado como init do Docker MySQL.
 
 ## Convenções
 
@@ -58,6 +83,8 @@ npm run build                             # tsc && vite build (typecheck + bundl
 - Rota extra não documentada no README: `GET /subjects/{id}/prerequisites` (retorna lista de disciplinas pré-requisito)
 - Docker MySQL usa init scripts em `database/schema_mentor_graduacao.sql` e `database/dados.sql`
 - `requirements.txt` usa intervalos flexíveis (`>=`) — sem versões fixas
+- `data/import_data.py` manipula `sys.path` igual ao seed — executar de dentro de `data/`
+- Disciplinas podem pertencer a múltiplos cursos via `CourseSubjects` (ex: ECT compartilhadas entre engenharias)
 
 ## Schema do banco
 
