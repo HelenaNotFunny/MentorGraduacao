@@ -2,7 +2,7 @@
 
 ## Stack
 
-- **Backend:** FastAPI + SQLAlchemy + JWT + banco relacional (SQLite dev / PostgreSQL prod)
+- **Backend:** FastAPI + SQLAlchemy + JWT + banco relacional MySQL
 - **Frontend:** React (SPA)
 - **Infra:** migrations via Alembic
 
@@ -12,7 +12,8 @@
 |---|---|
 | `User` | id, nome, email, senha_hash, curso_id |
 | `Course` | id, nome, instituicao |
-| `Subject` | id, course_id, nome, codigo, ementa, bibliografia, resumo, periodo_recomendado |
+| `Subject` | id, nome, codigo, ementa, bibliografia, resumo, periodo_recomendado |
+| `CourseSubjects` | id, course_id, subject_id | 
 | `Prerequisite` | id, subject_id, prerequisite_subject_id |
 | `FlowchartItem` | id, user_id, subject_id, semester_index, status (planned / completed) |
 | `Review` | id, user_id, subject_id, nota, resenha, comprovante_url, created_at |

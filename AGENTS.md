@@ -4,7 +4,7 @@ Projeto acadêmico de Engenharia de Software (UFRN). Planejamento de fluxo de gr
 
 ## Stack
 
-- **Backend:** FastAPI + SQLAlchemy + Alembic + JWT + SQLite (dev)
+- **Backend:** FastAPI + SQLAlchemy + Alembic + JWT + MySQL
 - **Frontend:** React + TypeScript + Vite + React Router
 
 ## Projeto

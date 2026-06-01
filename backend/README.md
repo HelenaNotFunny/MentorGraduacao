@@ -2,7 +2,7 @@
 
 ## Stack
 
-FastAPI + SQLAlchemy + JWT + SQLite (dev)
+FastAPI + SQLAlchemy + JWT + MySQL
 
 ## Dependências
 
