@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { FlowchartItem, flowchartService } from "../services/flowchart";
 import { Subject } from "../services/subject";
-import { auth } from "../services/auth";
+import { Course, courseService } from "../services/course";
 
 export function Flowchart() {
-  const navigate = useNavigate();
+  const { courseId } = useParams();
+  const [course, setCourse] = useState<Course | null>(null);
   const [items, setItems] = useState<FlowchartItem[]>([]);
   const [suggestions, setSuggestions] = useState<Subject[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -26,13 +27,15 @@ export function Flowchart() {
   }, []);
 
   useEffect(() => {
-    if (!auth.isAuthenticated()) {
-      navigate("/login");
-      return;
-    }
     load();
     loadSuggestions();
-  }, [load, loadSuggestions, navigate]);
+    if (courseId) {
+      courseService.list().then((courses) => {
+        const found = courses.find((c) => c.id === Number(courseId));
+        if (found) setCourse(found);
+      }).catch(console.error);
+    }
+  }, [load, loadSuggestions, courseId]);
 
   const maxSemester = Math.max(10, ...items.map((i) => i.semester_index));
 
@@ -78,7 +81,10 @@ export function Flowchart() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h2>Meu Fluxograma</h2>
+        <div>
+          <h2>Meu Fluxograma</h2>
+          {course && <p style={{ margin: 0, color: "#718096", fontSize: "0.9rem" }}>{course.nome}</p>}
+        </div>
         <button
           style={styles.button}
           onClick={() => setShowModal(true)}

@@ -1,6 +1,7 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { subjectService } from "../services/subject";
+import { Course, courseService } from "../services/course";
 
 export function SubjectCreate() {
   const navigate = useNavigate();
@@ -10,11 +11,17 @@ export function SubjectCreate() {
   const [bibliografia, setBibliografia] = useState("");
   const [resumo, setResumo] = useState("");
   const [periodo, setPeriodo] = useState("");
+  const [cursoId, setCursoId] = useState("");
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    courseService.list().then(setCourses).catch(console.error);
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const subject = await subjectService.create({
-      course_id: 1,
+      course_id: Number(cursoId),
       nome,
       codigo,
       ementa: ementa || undefined,
@@ -29,6 +36,19 @@ export function SubjectCreate() {
     <div style={styles.container}>
       <h2>Nova Disciplina</h2>
       <form onSubmit={handleSubmit} style={styles.form}>
+        <select
+          value={cursoId}
+          onChange={(e) => setCursoId(e.target.value)}
+          required
+          style={styles.input}
+        >
+          <option value="">Selecione um curso</option>
+          {courses.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.nome}
+            </option>
+          ))}
+        </select>
         <input
           placeholder="Nome"
           value={nome}

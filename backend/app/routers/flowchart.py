@@ -3,6 +3,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models.course_subjects import CourseSubjects
 from app.models.flowchart import FlowchartItem
 from app.models.subject import Prerequisite, Subject
 from app.models.user import User
@@ -64,7 +65,6 @@ def add_to_flowchart(
     if existing:
         raise HTTPException(status_code=409, detail="Disciplina já está no fluxograma")
 
-    # Validar pré-requisitos
     prereqs = db.query(Prerequisite).filter(Prerequisite.subject_id == subject.id).all()
     if prereqs:
         completed_ids = {
@@ -158,8 +158,12 @@ def suggestions(
         ).all()
     }
 
-    # Todas as disciplinas do mesmo curso do usuário
-    all_subjects = db.query(Subject).filter(Subject.course_id == user.curso_id).all()
+    all_subjects = (
+        db.query(Subject)
+        .join(CourseSubjects)
+        .filter(CourseSubjects.course_id == user.curso_id)
+        .all()
+    )
     available = []
     for s in all_subjects:
         if s.id in planned_ids:

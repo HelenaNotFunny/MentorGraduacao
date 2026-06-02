@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.database import SessionLocal
 from app.models.course import Course
+from app.models.course_subjects import CourseSubjects
 from app.models.subject import Prerequisite, Subject
 from app.models.user import User
 from app.services.auth import hash_senha
@@ -15,7 +16,6 @@ from app.services.auth import hash_senha
 def seed():
     db = SessionLocal()
 
-    # Curso
     curso = db.query(Course).first()
     if not curso:
         curso = Course(nome="Ciência da Computação", instituicao="UFRN")
@@ -26,7 +26,6 @@ def seed():
     else:
         print(f"Curso já existe: {curso.nome} (id={curso.id})")
 
-    # Usuário admin
     if db.query(User).count() == 0:
         admin = User(
             nome="Admin",
@@ -40,7 +39,6 @@ def seed():
     else:
         print("Usuários já existem, pulando.")
 
-    # Disciplinas
     if db.query(Subject).count() > 0:
         print("Disciplinas já existem, pulando.")
         db.close()
@@ -65,7 +63,6 @@ def seed():
     disciplinas = {}
     for d in disciplinas_data:
         subject = Subject(
-            course_id=curso.id,
             nome=d["nome"],
             codigo=d["codigo"],
             periodo_recomendado=d["periodo"],
@@ -75,19 +72,22 @@ def seed():
         )
         db.add(subject)
         db.flush()
+
+        cs = CourseSubjects(course_id=curso.id, subject_id=subject.id)
+        db.add(cs)
+
         disciplinas[d["codigo"]] = subject
         print(f"  Disciplina: {subject.codigo} - {subject.nome}")
 
-    # Pré-requisitos
     prerequisitos = [
-        ("IMD0006", "IMD0002"),  # Prog II precisa de Prog I
-        ("IMD0007", "IMD0006"),  # Estrutura de Dados precisa de Prog II
-        ("IMD0008", "IMD0004"),  # Cálculo II precisa de Cálculo I
-        ("IMD0010", "IMD0007"),  # BD precisa de Estrutura de Dados
-        ("IMD0011", "IMD0006"),  # ES precisa de Prog II
-        ("IMD0012", "IMD0007"),  # Redes precisa de Estrutura de Dados
-        ("IMD0013", "IMD0007"),  # IA precisa de Estrutura de Dados
-        ("IMD0013", "IMD0009"),  # IA precisa de Lógica
+        ("IMD0006", "IMD0002"),
+        ("IMD0007", "IMD0006"),
+        ("IMD0008", "IMD0004"),
+        ("IMD0010", "IMD0007"),
+        ("IMD0011", "IMD0006"),
+        ("IMD0012", "IMD0007"),
+        ("IMD0013", "IMD0007"),
+        ("IMD0013", "IMD0009"),
     ]
 
     for cod, prereq_cod in prerequisitos:

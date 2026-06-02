@@ -1,6 +1,7 @@
 from fastapi import status
-from app.models.subject import Subject,Prerequisite
+from app.models.subject import Subject, Prerequisite
 from app.models.course import Course
+from app.models.course_subjects import CourseSubjects
 
 
 def test_listar_disciplinas_vazio(client):
@@ -9,24 +10,28 @@ def test_listar_disciplinas_vazio(client):
     assert response.json() == []
 
 def test_listar_disciplinas_com_filtros(client, session):
-    curso_1 = Course(nome="Engenharia da computação",instituicao='UFRN')
+    curso_1 = Course(nome="Engenharia da computação", instituicao='UFRN')
     curso_2 = Course(nome="CeT", instituicao='UFRN')
     session.add_all([curso_1, curso_2])
     session.commit() 
 
-    sub_calculo = Subject(nome="Cálculo I", codigo="ECT123", course_id=curso_2.id)
-    sub_algebr = Subject(nome="Álgebra Linear", codigo="ECT456", course_id=curso_1.id)
-    sub_poo = Subject(nome="Programação Orientada a Objetos", codigo="DCA123", course_id=curso_1.id)
-    
+    sub_calculo = Subject(nome="Cálculo I", codigo="ECT123")
+    sub_algebr = Subject(nome="Álgebra Linear", codigo="ECT456")
+    sub_poo = Subject(nome="Programação Orientada a Objetos", codigo="DCA123")
     session.add_all([sub_calculo, sub_algebr, sub_poo])
+    session.flush()
+
+    session.add_all([
+        CourseSubjects(course_id=curso_2.id, subject_id=sub_calculo.id),
+        CourseSubjects(course_id=curso_1.id, subject_id=sub_algebr.id),
+        CourseSubjects(course_id=curso_1.id, subject_id=sub_poo.id),
+    ])
     session.commit()
 
-    #  Listar todos os cursos 
     response = client.get("/subjects/")
     assert response.status_code == status.HTTP_200_OK
     assert len(response.json()) == 3
 
-    #   Filtrar por course_id
     response = client.get("/subjects/", params={"course_id": curso_1.id})
     assert response.status_code == status.HTTP_200_OK
     dados_curso = response.json()
@@ -34,14 +39,12 @@ def test_listar_disciplinas_com_filtros(client, session):
     assert any(d["codigo"] == "ECT456" for d in dados_curso)
     assert any(d["codigo"] == "DCA123" for d in dados_curso)
 
-    # Filtrar por busca nome da materia
     response = client.get("/subjects/", params={"search": "Cálculo"})
     assert response.status_code == status.HTTP_200_OK
     dados_busca_nome = response.json()
     assert len(dados_busca_nome) == 1
     assert dados_busca_nome[0]["nome"] == "Cálculo I"
 
-    #   Filtrar por busca Código
     response = client.get("/subjects/", params={"search": "DCA123"})
     assert response.status_code == status.HTTP_200_OK
     dados_busca_cod = response.json()
@@ -49,14 +52,13 @@ def test_listar_disciplinas_com_filtros(client, session):
     assert dados_busca_cod[0]["nome"] == "Programação Orientada a Objetos"
 
 
-
 def test_listar_pre_requisitos_sucesso(client, session):
-    curso = Course(nome="ceT",instituicao="UFRN")
+    curso = Course(nome="ceT", instituicao="UFRN")
     session.add(curso)
     session.commit()
 
-    sub_calculo1 = Subject(nome="Cálculo I", codigo="ECT123", course_id=curso.id)
-    sub_calculo2 = Subject(nome="Cálculo II", codigo="ECT456", course_id=curso.id)
+    sub_calculo1 = Subject(nome="Cálculo I", codigo="ECT123")
+    sub_calculo2 = Subject(nome="Cálculo II", codigo="ECT456")
     session.add_all([sub_calculo1, sub_calculo2])
     session.commit()
 

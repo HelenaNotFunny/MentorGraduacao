@@ -9,6 +9,12 @@ htmlcov/
 
 
 __pycache__/
-*.pycgit status
+*.pyc
 
 .pytest_cache
+
+# Environment
+.env
+
+# Data import
+/data/
