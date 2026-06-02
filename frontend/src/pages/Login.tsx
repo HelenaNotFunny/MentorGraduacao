@@ -1,6 +1,7 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../services/auth";
+import { Course, courseService } from "../services/course";
 
 interface LoginProps {
   onLogin: () => void;
@@ -12,7 +13,16 @@ export function Login({ onLogin }: LoginProps) {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [cursoId, setCursoId] = useState("");
+  const [courses, setCourses] = useState<Course[]>([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    if (isRegister) {
+      courseService.list().then(setCourses).catch(console.error);
+    }
+  }, [isRegister]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -20,7 +30,8 @@ export function Login({ onLogin }: LoginProps) {
 
     try {
       if (isRegister) {
-        await auth.register({ nome, email, senha });
+        await auth.register({ nome, email, senha, curso_id: Number(cursoId) });
+        setSuccess("Conta criada com sucesso! Entrando...");
       }
       const { access_token } = await auth.login({ email, senha });
       localStorage.setItem("token", access_token);
@@ -37,15 +48,31 @@ export function Login({ onLogin }: LoginProps) {
         <h2>{isRegister ? "Criar conta" : "Entrar"}</h2>
 
         {error && <p style={styles.error}>{error}</p>}
+        {success && <p style={styles.success}>{success}</p>}
 
         {isRegister && (
-          <input
-            placeholder="Nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-            style={styles.input}
-          />
+          <>
+            <input
+              placeholder="Nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+              style={styles.input}
+            />
+            <select
+              value={cursoId}
+              onChange={(e) => setCursoId(e.target.value)}
+              required
+              style={styles.input}
+            >
+              <option value="">Selecione um curso</option>
+              {courses.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nome}
+                </option>
+              ))}
+            </select>
+          </>
         )}
 
         <input
@@ -119,6 +146,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 600,
   },
   error: { color: "#d32f2f", margin: 0, fontSize: "0.875rem" },
+  success: { color: "#2e7d32", margin: 0, fontSize: "0.875rem" },
   toggle: { textAlign: "center", fontSize: "0.875rem", margin: 0 },
   link: {
     background: "none",

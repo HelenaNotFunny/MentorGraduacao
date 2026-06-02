@@ -89,14 +89,7 @@ export function Courses() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const cursosDemonstracao: Course[] = [
-      { id: 1, nome: "Engenharia da Computação", instituicao: "UFRN" },
-      { id: 2, nome: "Ciência e Tecnologia (CeT)", instituicao: "UFRN" },
-      { id: 3, nome: "Sistemas de Informação", instituicao: "UFRN" },
-    ];
-    setCourses(cursosDemonstracao);
-
-    // courseService.list().then(setCourses).catch(console.error);
+    courseService.list().then(setCourses).catch(console.error);
   }, []);
 
   const filteredCourses = courses.filter((course) =>

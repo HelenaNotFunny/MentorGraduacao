@@ -20,9 +20,25 @@ uvicorn app.main:app --reload             # servidor dev :8000
 python -m pytest                          # testes (SQLite in-memory)
 
 # Frontend (workdir: frontend/)
+npm install                               # instalar dependências (lucide-react, etc.)
 npm run dev                               # servidor dev :5173 (proxy /api → :8000)
 npm run build                             # tsc && vite build (typecheck + bundle)
 ```
+
+## Rotas frontend
+
+| Path | Página | Autenticação |
+|---|---|---|
+| `/` | Home | — |
+| `/login` | Login + Cadastro | — |
+| `/courses` | Lista de cursos | — |
+| `/flowchart` | Fluxograma pessoal | Bearer |
+| `/flowchart/:courseId` | Fluxograma do curso | Bearer |
+| `/subjects` | Lista de disciplinas | — |
+| `/subjects/new` | Nova disciplina | — |
+| `/subjects/:id` | Detalhe da disciplina | — |
+
+Rotas com `Bearer` usam o componente `ProtectedRoute` que redireciona para `/login` se não autenticado.
 
 ## Arquitetura
 
@@ -73,7 +89,7 @@ Em outra máquina, `docker compose up -d` já vem com todos os dados.
 
 - Commits em português; `main` recebe merges de `dev` via PR
 - Sprint 4 implementada (auth + cursos + disciplinas + fluxograma + avaliações)
-- `userStories.md`, `plan.md` e `plan_integration.md` na raiz
+- `userStories.md`, `plan.md`, `plan_frontend.md` e `plan_integration.md` na raiz
 
 ## Nuances
 
@@ -85,6 +101,8 @@ Em outra máquina, `docker compose up -d` já vem com todos os dados.
 - `requirements.txt` usa intervalos flexíveis (`>=`) — sem versões fixas
 - `data/import_data.py` manipula `sys.path` igual ao seed — executar de dentro de `data/`
 - Disciplinas podem pertencer a múltiplos cursos via `CourseSubjects` (ex: ECT compartilhadas entre engenharias)
+- A migration `8892fe0d06f0` adiciona a coluna `created_at` na tabela `User` (ausente no schema SQL original do Docker)
+- `npm install` é obrigatório antes de `npm run dev` (instala `lucide-react`, etc.)
 
 ## Schema do banco
 

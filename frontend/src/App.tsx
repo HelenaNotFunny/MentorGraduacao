@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Header } from "./components/Header";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Courses } from "./pages/Courses";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
@@ -26,7 +27,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login onLogin={() => auth.me().then(setUser)} />} />
         <Route path="/courses" element={<Courses />} />
-        <Route path="/flowchart" element={<Flowchart />} />
+        <Route path="/flowchart" element={<ProtectedRoute><Flowchart /></ProtectedRoute>} />
+        <Route path="/flowchart/:courseId" element={<ProtectedRoute><Flowchart /></ProtectedRoute>} />
         <Route path="/subjects" element={<Subjects />} />
         <Route path="/subjects/new" element={<SubjectCreate />} />
         <Route path="/subjects/:id" element={<SubjectDetail />} />

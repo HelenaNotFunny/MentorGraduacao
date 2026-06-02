@@ -67,13 +67,14 @@ MentorGraduacao/
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
-│   │   ├── components/          # Header
+│   │   ├── components/          # Header, ProtectedRoute
 │   │   ├── pages/               # Home, Login, Courses, Subjects, SubjectDetail, SubjectCreate, Flowchart
 │   │   └── services/            # API client + serviços (auth, course, subject, flowchart, review)
 │   ├── package.json
 │   └── vite.config.ts           # Proxy /api → backend
 ├── AGENTS.md                    # Instruções para agentes OpenCode
 ├── plan.md                      # Plano de sprints
+├── plan_frontend.md             # Plano de atualizações do frontend
 ├── plan_integration.md          # Plano de migração MySQL
 └── userStories.md               # Requisitos funcionais
 ```
