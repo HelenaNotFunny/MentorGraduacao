@@ -9,7 +9,6 @@ class PrerequisiteOut(BaseModel):
 
 
 class SubjectCreate(BaseModel):
-    course_id: int
     nome: str
     codigo: str
     ementa: str | None = None
@@ -17,6 +16,13 @@ class SubjectCreate(BaseModel):
     resumo: str | None = None
     periodo_recomendado: int | None = None
 
+    course_ids: list[int]
+
+class CourseRef(BaseModel):
+    id: int
+    nome: str
+
+    model_config = {"from_attributes": True}
 
 class SubjectOut(BaseModel):
     id: int
@@ -26,6 +32,9 @@ class SubjectOut(BaseModel):
     bibliografia: str | None = None
     resumo: str | None = None
     periodo_recomendado: int | None = None
+
     prerequisitos: list[PrerequisiteOut] = []
+
+    cursos: list[CourseRef] = []
 
     model_config = {"from_attributes": True}

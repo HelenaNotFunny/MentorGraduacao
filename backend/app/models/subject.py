@@ -15,7 +15,17 @@ class Subject(Base):
     resumo: Mapped[str] = mapped_column(Text, nullable=True)
     periodo_recomendado: Mapped[int] = mapped_column(Integer, nullable=True)
 
-    course_subjects = relationship("CourseSubjects", back_populates="subject", cascade="all, delete-orphan")
+    course_subjects = relationship(
+        "CourseSubjects", 
+        back_populates="subject", 
+        cascade="all, delete-orphan")
+    
+    courses = relationship(
+        "Course",
+        secondary="CourseSubjects",
+        viewonly=True
+    )
+    
     prerequisitos = relationship(
         "Prerequisite",
         foreign_keys="Prerequisite.subject_id",
