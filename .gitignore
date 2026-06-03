@@ -1,0 +1,20 @@
+node_modules/
+dist/
+
+.venv/
+env/
+ENV/
+.coverage
+htmlcov/
+
+
+__pycache__/
+*.pyc
+
+.pytest_cache
+
+# Environment
+.env
+
+# Data import
+/data/
