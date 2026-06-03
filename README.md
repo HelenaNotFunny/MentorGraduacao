@@ -72,10 +72,7 @@ MentorGraduacao/
 │   │   └── services/            # API client + serviços (auth, course, subject, flowchart, review)
 │   ├── package.json
 │   └── vite.config.ts           # Proxy /api → backend
-├── AGENTS.md                    # Instruções para agentes OpenCode
-├── plan.md                      # Plano de sprints
-├── plan_frontend.md             # Plano de atualizações do frontend
-├── plan_integration.md          # Plano de migração MySQL
+├── READ.md                      # Especificações do projeto, incluindo como rodar
 └── userStories.md               # Requisitos funcionais
 ```
 
@@ -119,6 +116,11 @@ pip install -r requirements.txt
 alembic upgrade head
 python seeds/seed.py
 uvicorn app.main:app --reload
+```
+
+Se é a primeira vez rodando o código, talvez seja necessário rodar o seguinte comando antes de rodar _alembic upgrade head_
+```bash
+alembic stamp head
 ```
 
 Servidor em `http://localhost:8000`. Docs interativas em `http://localhost:8000/docs`.
