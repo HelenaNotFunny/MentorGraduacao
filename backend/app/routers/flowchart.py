@@ -3,7 +3,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models.course_subjects import CourseSubjects
+from app.models.coursesubjects import CourseSubjects
 from app.models.flowchart import FlowchartItem
 from app.models.subject import Prerequisite, Subject
 from app.models.user import User

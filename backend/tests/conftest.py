@@ -16,7 +16,7 @@ from app.database import Base, get_db
 
 from app.models.user import User  
 from app.models.course import Course  
-from app.models.course_subjects import CourseSubjects
+from app.models.coursesubjects import CourseSubjects
 from app.models.subject import Subject, Prerequisite
 from app.models.review import Review  
 from app.models.flowchart import FlowchartItem  

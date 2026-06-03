@@ -14,7 +14,7 @@ class Course(Base):
                         back_populates="curso")
     
     course_subjects = relationship("CourseSubjects", 
-                                   back_populamastes="course", 
+                                   back_populates="course", 
                                    cascade="all, delete-orphan")
     
     subjects = relationship(

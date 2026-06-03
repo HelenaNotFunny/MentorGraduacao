@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.database import SessionLocal
 from app.models.course import Course
-from app.models.course_subjects import CourseSubjects
+from app.models.coursesubjects import CourseSubjects
 from app.models.subject import Subject, Prerequisite
 from app.models.user import User
 from app.services.auth import hash_senha
@@ -79,14 +79,6 @@ def seed():
             "(admin@test.com / 123456)"
         )
 
-    # =====================
-    # EVITA DUPLICAÇÃO
-    # =====================
-
-    if db.query(Subject).count() > 0:
-        print("Disciplinas já existem, pulando.")
-        db.close()
-        return
 
     # =====================
     # DISCIPLINAS DE CC
@@ -127,24 +119,31 @@ def seed():
 
     for d in disciplinas_data + disciplinas_ec:
 
-        subject = Subject(
-            nome=d["nome"],
-            codigo=d["codigo"],
-            periodo_recomendado=d["periodo"],
-            ementa=f"Ementa da disciplina {d['nome']}.",
-            bibliografia=f"Bibliografia básica da disciplina {d['nome']}.",
-            resumo=f"Resumo dos principais tópicos de {d['nome']}.",
+        subject = (
+            db.query(Subject)
+            .filter(Subject.codigo == d["codigo"])
+            .first()
         )
 
-        db.add(subject)
-        db.flush()
+        if not subject:
+            subject = Subject(
+                nome=d["nome"],
+                codigo=d["codigo"],
+                periodo_recomendado=d["periodo"],
+                ementa=f"Ementa da disciplina {d['nome']}.",
+                bibliografia=f"Bibliografia básica da disciplina {d['nome']}.",
+                resumo=f"Resumo dos principais tópicos de {d['nome']}.",
+            )
+
+            db.add(subject)
+            db.flush()
+
+            print(
+                f"Disciplina criada: "
+                f"{subject.codigo} - {subject.nome}"
+            )
 
         disciplinas[d["codigo"]] = subject
-
-        print(
-            f"Disciplina criada: "
-            f"{subject.codigo} - {subject.nome}"
-        )
 
     # =====================
     # RELAÇÃO CC -> DISCIPLINAS
@@ -152,12 +151,23 @@ def seed():
 
     for subject in disciplinas.values():
         if subject.codigo.startswith("IMD"):
-            db.add(
-                CourseSubjects(
-                    course_id=curso_cc.id,
-                    subject_id=subject.id,
+
+            existe = (
+                db.query(CourseSubjects)
+                .filter(
+                    CourseSubjects.course_id == curso_cc.id,
+                    CourseSubjects.subject_id == subject.id,
                 )
+                .first()
             )
+
+            if not existe:
+                db.add(
+                    CourseSubjects(
+                        course_id=curso_cc.id,
+                        subject_id=subject.id,
+                    )
+                )
 
     # =====================
     # RELAÇÃO EC -> DISCIPLINAS
@@ -174,25 +184,47 @@ def seed():
     ]
 
     for codigo in compartilhadas_ec:
-        db.add(
-            CourseSubjects(
-                course_id=curso_ec.id,
-                subject_id=disciplinas[codigo].id,
+
+        existe = (
+            db.query(CourseSubjects)
+            .filter(
+                CourseSubjects.course_id == curso_ec.id,
+                CourseSubjects.subject_id == disciplinas[codigo].id,
             )
+            .first()
         )
 
-    for codigo in [
-        "EC0001",
-        "EC0002",
-        "EC0003",
-        "EC0004",
-    ]:
-        db.add(
-            CourseSubjects(
-                course_id=curso_ec.id,
-                subject_id=disciplinas[codigo].id,
+        if not existe:
+            db.add(
+                CourseSubjects(
+                    course_id=curso_ec.id,
+                    subject_id=disciplinas[codigo].id,
+                )
             )
+
+    for codigo in [
+    "EC0001",
+    "EC0002",
+    "EC0003",
+    "EC0004",
+    ]:
+
+        existe = (
+            db.query(CourseSubjects)
+            .filter(
+                CourseSubjects.course_id == curso_ec.id,
+                CourseSubjects.subject_id == disciplinas[codigo].id,
+            )
+            .first()
         )
+
+        if not existe:
+            db.add(
+                CourseSubjects(
+                    course_id=curso_ec.id,
+                    subject_id=disciplinas[codigo].id,
+                )
+            )
 
     # =====================
     # PRÉ-REQUISITOS CC
@@ -210,6 +242,16 @@ def seed():
     ]
 
     for cod, prereq_cod in prerequisitos_cc:
+        existe = (
+        db.query(Prerequisite)
+        .filter(
+            Prerequisite.subject_id == disciplinas[cod].id,
+            Prerequisite.prerequisite_subject_id == disciplinas[prereq_cod].id,
+        )
+        .first()
+    )
+
+    if not existe:
         db.add(
             Prerequisite(
                 subject_id=disciplinas[cod].id,

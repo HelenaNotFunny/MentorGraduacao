@@ -2,10 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models.course_subjects import CourseSubjects
 from app.models.subject import Prerequisite, Subject
 from app.schemas.subject import SubjectCreate, SubjectOut
-from app.models.coursesubject import CourseSubject
+from app.models.coursesubjects import CourseSubjects
+
+from app.models.user import User
+from app.services.auth import get_current_user
 
 router = APIRouter(prefix="/subjects", tags=["subjects"])
 
@@ -18,18 +20,19 @@ def list_subjects(
 ):
     query = (
         db.query(Subject)
-        .join(CourseSubject)
+        .join(
+            CourseSubjects,
+            Subject.id == CourseSubjects.subject_id
+        )
         .filter(
-            CourseSubject.course_id == current_user.curso_id
+            CourseSubjects.course_id == current_user.curso_id
         )
     )
 
     if search:
         query = query.filter(
-            or_(
-                Subject.nome.ilike(f"%{search}%"),
-                Subject.codigo.ilike(f"%{search}%")
-            )
+            Subject.nome.ilike(f"%{search}%")
+            | Subject.codigo.ilike(f"%{search}%")
         )
 
     return query.all()
@@ -58,7 +61,7 @@ def create_subject(body: SubjectCreate, db: Session = Depends(get_db)):
     db.flush()
     for course_id in body.course_ids:
         db.add(
-            CourseSubject(
+            CourseSubjects(
                 course_id=course_id,
                 subject_id=subject.id
             )
