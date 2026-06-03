@@ -5,6 +5,15 @@ from jose import JWTError, jwt
 
 from app.config import settings
 
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.models.user import User
+
+security = HTTPBearer()
+
 
 def hash_senha(senha: str) -> str:
     return bcrypt.hashpw(senha.encode(), bcrypt.gensalt()).decode()
@@ -29,3 +38,26 @@ def decodificar_token(token: str) -> int | None:
         return int(user_id)
     except JWTError:
         return None
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db),
+) -> User:
+
+    user_id = decodificar_token(credentials.credentials)
+
+    if user_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido",
+        )
+
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuário não encontrado",
+        )
+
+    return user

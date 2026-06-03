@@ -143,9 +143,9 @@ Servidor em `http://localhost:5173`. Rotas `/api/*` são proxyadas para o backen
 ### Dados de exemplo
 
 O script `backend/seeds/seed.py` cria:
-- Curso: Ciência da Computação (UFRN)
+- Curso: Ciência da Computação (UFRN) e Engenharia de Computação
 - Admin: admin@test.com / 123456
-- 13 disciplinas com 8 pré-requisitos
+- 17 disciplinas com 12 pré-requisitos
 
 O `database/dados.sql` também pode ser usado como init do Docker MySQL.
 

@@ -2,26 +2,39 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models.course_subjects import CourseSubjects
 from app.models.subject import Prerequisite, Subject
 from app.schemas.subject import SubjectCreate, SubjectOut
+from app.models.coursesubjects import CourseSubjects
+
+from app.models.user import User
+from app.services.auth import get_current_user
 
 router = APIRouter(prefix="/subjects", tags=["subjects"])
 
 
 @router.get("/", response_model=list[SubjectOut])
 def list_subjects(
-    course_id: int | None = Query(None),
     search: str | None = Query(None),
-    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    query = db.query(Subject)
-    if course_id:
-        query = query.join(CourseSubjects).filter(CourseSubjects.course_id == course_id)
+    query = (
+        db.query(Subject)
+        .join(
+            CourseSubjects,
+            Subject.id == CourseSubjects.subject_id
+        )
+        .filter(
+            CourseSubjects.course_id == current_user.curso_id
+        )
+    )
+
     if search:
         query = query.filter(
-            Subject.nome.ilike(f"%{search}%") | Subject.codigo.ilike(f"%{search}%")
+            Subject.nome.ilike(f"%{search}%")
+            | Subject.codigo.ilike(f"%{search}%")
         )
+
     return query.all()
 
 
@@ -36,17 +49,23 @@ def get_subject(subject_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=SubjectOut, status_code=status.HTTP_201_CREATED)
 def create_subject(body: SubjectCreate, db: Session = Depends(get_db)):
     subject = Subject(
-        nome=body.nome,
-        codigo=body.codigo,
-        ementa=body.ementa,
-        bibliografia=body.bibliografia,
-        resumo=body.resumo,
-        periodo_recomendado=body.periodo_recomendado,
+    nome=body.nome,
+    codigo=body.codigo,
+    ementa=body.ementa,
+    bibliografia=body.bibliografia,
+    resumo=body.resumo,
+    periodo_recomendado=body.periodo_recomendado
     )
+
     db.add(subject)
     db.flush()
-    cs = CourseSubjects(course_id=body.course_id, subject_id=subject.id)
-    db.add(cs)
+    for course_id in body.course_ids:
+        db.add(
+            CourseSubjects(
+                course_id=course_id,
+                subject_id=subject.id
+            )
+        )
     db.commit()
     db.refresh(subject)
     return subject

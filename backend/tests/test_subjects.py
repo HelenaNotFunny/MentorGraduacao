@@ -1,7 +1,7 @@
 from fastapi import status
 from app.models.subject import Subject, Prerequisite
 from app.models.course import Course
-from app.models.course_subjects import CourseSubjects
+from app.models.coursesubjects import CourseSubjects
 
 
 def test_listar_disciplinas_vazio(client):

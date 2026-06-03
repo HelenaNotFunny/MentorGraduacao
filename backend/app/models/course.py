@@ -10,5 +10,15 @@ class Course(Base):
     nome: Mapped[str] = mapped_column(String(200), nullable=False)
     instituicao: Mapped[str] = mapped_column(String(200), nullable=False)
 
-    users = relationship("User", back_populates="curso")
-    course_subjects = relationship("CourseSubjects", back_populates="course", cascade="all, delete-orphan")
+    users = relationship("User", 
+                        back_populates="curso")
+    
+    course_subjects = relationship("CourseSubjects", 
+                                   back_populates="course", 
+                                   cascade="all, delete-orphan")
+    
+    subjects = relationship(
+        "Subject",
+        secondary="CourseSubjects",
+        viewonly=True
+    )
