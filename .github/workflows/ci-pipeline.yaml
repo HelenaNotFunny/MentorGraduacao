@@ -34,12 +34,12 @@ jobs:
 
       # Instala as dependências
       - name: Install dependencies
-        run: 
+        run: | 
           cd backend
           pip install -r requirements.txt
 
       # Roda os testes
       - name: Run tests
-        run: 
+        run: |
           cd backend
           python -m pytest
