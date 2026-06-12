@@ -72,10 +72,7 @@ MentorGraduacao/
 │   │   └── services/            # API client + serviços (auth, course, subject, flowchart, review)
 │   ├── package.json
 │   └── vite.config.ts           # Proxy /api → backend
-├── AGENTS.md                    # Instruções para agentes OpenCode
-├── plan.md                      # Plano de sprints
-├── plan_frontend.md             # Plano de atualizações do frontend
-├── plan_integration.md          # Plano de migração MySQL
+├── READ.md                      # Especificações do projeto, incluindo como rodar
 └── userStories.md               # Requisitos funcionais
 ```
 
@@ -121,6 +118,11 @@ python seeds/seed.py
 uvicorn app.main:app --reload
 ```
 
+Se é a primeira vez rodando o código, talvez seja necessário rodar o seguinte comando antes de rodar _alembic upgrade head_
+```bash
+alembic stamp head
+```
+
 Servidor em `http://localhost:8000`. Docs interativas em `http://localhost:8000/docs`.
 
 **Testes** usam SQLite in-memory (independem do Docker):
@@ -143,9 +145,9 @@ Servidor em `http://localhost:5173`. Rotas `/api/*` são proxyadas para o backen
 ### Dados de exemplo
 
 O script `backend/seeds/seed.py` cria:
-- Curso: Ciência da Computação (UFRN)
+- Curso: Ciência da Computação (UFRN) e Engenharia de Computação
 - Admin: admin@test.com / 123456
-- 13 disciplinas com 8 pré-requisitos
+- 17 disciplinas com 12 pré-requisitos
 
 O `database/dados.sql` também pode ser usado como init do Docker MySQL.
 
