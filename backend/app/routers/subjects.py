@@ -8,6 +8,7 @@ from app.models.coursesubjects import CourseSubjects
 
 from app.models.user import User
 from app.services.auth import get_current_user
+from app.services.auth import get_admin_user
 
 router = APIRouter(prefix="/subjects", tags=["subjects"])
 
@@ -47,7 +48,7 @@ def get_subject(subject_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=SubjectOut, status_code=status.HTTP_201_CREATED)
-def create_subject(body: SubjectCreate, db: Session = Depends(get_db)):
+def create_subject(body: SubjectCreate, db: Session = Depends(get_db), current_user: User = Depends(get_admin_user)):
     subject = Subject(
     nome=body.nome,
     codigo=body.codigo,
@@ -56,6 +57,7 @@ def create_subject(body: SubjectCreate, db: Session = Depends(get_db)):
     resumo=body.resumo,
     periodo_recomendado=body.periodo_recomendado
     )
+    
 
     db.add(subject)
     db.flush()

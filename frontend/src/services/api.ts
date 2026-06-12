@@ -13,8 +13,17 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
 
   if (!res.ok) {
-    const body = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(body.detail ?? "Erro inesperado");
+    const body = await res.json().catch(() => ({
+      detail: res.statusText,
+    }));
+
+    console.log(body);
+
+    throw new Error(
+      typeof body.detail === "string"
+        ? body.detail
+        : JSON.stringify(body)
+    );
   }
 
   return res.json();

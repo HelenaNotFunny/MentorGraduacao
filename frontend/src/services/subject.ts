@@ -7,7 +7,7 @@ export interface Prerequisite {
 
 export interface Subject {
   id: number;
-  course_id: number;
+  course_ids: number[];
   nome: string;
   codigo: string;
   ementa: string | null;
@@ -19,17 +19,21 @@ export interface Subject {
 
 export const subjectService = {
   list: (params?: { course_id?: number; search?: string }) => {
-    const query = new URLSearchParams();
-    if (params?.course_id) query.set("course_id", String(params.course_id));
-    if (params?.search) query.set("search", params.search);
-    const qs = query.toString();
-    return api.get<Subject[]>(`/subjects/${qs ? `?${qs}` : ""}`);
+  const query = new URLSearchParams();
+
+  if (params?.course_id)
+    query.set("course_id", String(params.course_id));
+
+  if (params?.search)
+    query.set("search", params.search);
+
+  return api.get<Subject[]>(`/subjects/?${query.toString()}`);
   },
 
   getById: (id: number) => api.get<Subject>(`/subjects/${id}`),
 
   create: (data: {
-    course_id: number;
+    course_ids: number[];
     nome: string;
     codigo: string;
     ementa?: string;
