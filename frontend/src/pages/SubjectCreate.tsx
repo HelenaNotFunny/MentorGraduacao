@@ -13,6 +13,7 @@ export function SubjectCreate() {
   const [periodo, setPeriodo] = useState("");
   const [cursoId, setCursoId] = useState("");
   const [courses, setCourses] = useState<Course[]>([]);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
     courseService.list().then(setCourses).catch(console.error);
@@ -20,21 +21,43 @@ export function SubjectCreate() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const subject = await subjectService.create({
-      course_id: Number(cursoId),
-      nome,
-      codigo,
-      ementa: ementa || undefined,
-      bibliografia: bibliografia || undefined,
-      resumo: resumo || undefined,
-      periodo_recomendado: periodo ? Number(periodo) : undefined,
-    });
-    navigate(`/subjects/${subject.id}`);
+
+    try {
+      setErro("");
+
+      const subject = await subjectService.create({
+        course_ids: [Number(cursoId)],
+        nome,
+        codigo,
+        ementa: ementa || undefined,
+        bibliografia: bibliografia || undefined,
+        resumo: resumo || undefined,
+        periodo_recomendado: periodo ? Number(periodo) : undefined,
+      });
+
+      navigate(`/subjects/${subject.id}`);
+
+    } catch (err: any) {
+      setErro(err.message);
+    }
   }
 
   return (
     <div style={styles.container}>
       <h2>Nova Disciplina</h2>
+      {erro && (
+        <div
+          style={{
+            backgroundColor: "#ffebee",
+            color: "#c62828",
+            padding: "10px",
+            borderRadius: "4px",
+            marginBottom: "1rem",
+          }}
+        >
+          {erro}
+        </div>
+      )}
       <form onSubmit={handleSubmit} style={styles.form}>
         <select
           value={cursoId}
