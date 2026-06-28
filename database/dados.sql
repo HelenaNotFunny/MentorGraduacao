@@ -14,7 +14,7 @@ INSERT INTO User (nome, email, senha_hash, curso_id)
 VALUES
 (
     'Admin',
-    'admin@test.com',
+    'admin@teste.com',
     '$2b$12$ExemploHashAdmin',
     1
 ),

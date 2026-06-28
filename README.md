@@ -47,36 +47,51 @@ Projeto acadêmico da disciplina de Engenharia de Software (UFRN).
 
 ```
 MentorGraduacao/
-├── database/
-│   ├── docker-compose.yml       # MySQL 8.0
-│   ├── schema_mentor_graduacao.sql
-│   ├── dados.sql                # Dados iniciais
-│   └── README.md                # Setup do banco
+├── .github/workflows
+│   ├── ci-pipeline.yaml            # Integração contínua
 ├── backend/
 │   ├── app/
-│   │   ├── main.py              # FastAPI app entrypoint
-│   │   ├── config.py            # Configurações (DB, JWT)
-│   │   ├── database.py          # SQLAlchemy engine + session
-│   │   ├── models/              # Modelos: Course, User, Subject, CourseSubjects, Prerequisite, FlowchartItem, Review
-│   │   ├── schemas/             # Schemas Pydantic
-│   │   ├── routers/             # Endpoints: auth, courses, subjects, flowchart, reviews
-│   │   └── services/            # Lógica de autenticação (bcrypt, JWT)
-│   ├── alembic/                 # Migrations
-│   ├── seeds/seed.py            # Dados de exemplo
-│   ├── uploads/                 # Comprovantes de avaliação
+│   │   ├── main.py                 # FastAPI app entrypoint
+│   │   ├── config.py               # Configurações (DB, JWT)
+│   │   ├── database.py             # SQLAlchemy engine + session
+│   │   ├── models/                 # Modelos: Course, User, Subject, CourseSubjects, Prerequisite, FlowchartItem, Review
+│   │   ├── schemas/                # Schemas Pydantic
+│   │   ├── routers/                # Endpoints: auth, courses, subjects, flowchart, reviews
+│   │   └── services/               # Lógica de autenticação (bcrypt, JWT)
+│   ├── alembic/                    # Migrations
+│   ├── tests/                      # Diretório dos testes
+│   ├── Dockerfile                  # Arquivo de Configuração de Build
+│   ├── .env.example                # exemplo do env para configurar o DATABASE_URL
 │   └── requirements.txt
+├── database/
+│   ├── cria_schema_mentor_graduacao.sql # Schema do banco de dados
+│   ├── dados.sql                        # Dados iniciais
+│   └── README.md                        # Setup do banco
 ├── frontend/
 │   ├── src/
-│   │   ├── components/          # Header, ProtectedRoute
-│   │   ├── pages/               # Home, Login, Courses, Subjects, SubjectDetail, SubjectCreate, Flowchart
-│   │   └── services/            # API client + serviços (auth, course, subject, flowchart, review)
-│   ├── package.json
-│   └── vite.config.ts           # Proxy /api → backend
-├── READ.md                      # Especificações do projeto, incluindo como rodar
-└── userStories.md               # Requisitos funcionais
+│   │   ├── components/             # Header, ProtectedRoute
+│   │   ├── pages/                  # Home, Login, Courses, Subjects, SubjectDetail, SubjectCreate, Flowchart
+│   │   ├── services/               # API client + serviços (auth, course, subject, flowchart, review)
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   └── main.tsx                 
+│   ├── index.html                  # HTML base
+│   ├── package.json  
+│   ├── vite.config.ts              # Proxy /api → backend
+│   └── Dockerfile                  # Arquivo de Configuração de Build
+├── READ.md                         # Especificações do projeto, incluindo como rodar
+├── userStories.md                  # Requisitos funcionais
+├── docker-compose.yml              # Gerencia dos container
+└── .gitignore
 ```
 
 ## Como rodar
+
+### Projeto completo via Docker
+
+```bash
+docker compose up --build
+```
 
 ### Banco de dados (MySQL via Docker)
 
@@ -145,8 +160,8 @@ Servidor em `http://localhost:5173`. Rotas `/api/*` são proxyadas para o backen
 ### Dados de exemplo
 
 O script `backend/seeds/seed.py` cria:
-- Curso: Ciência da Computação (UFRN) e Engenharia de Computação
-- Admin: admin@test.com / 123456
+- Curso: Ciência da Computação (UFRN) e Engenharia de Computação (UFRN)
+- Admin: admin@test.com / 123456 (Com autorizações especiais)
 - 17 disciplinas com 12 pré-requisitos
 
 O `database/dados.sql` também pode ser usado como init do Docker MySQL.
@@ -187,7 +202,6 @@ erDiagram
 | email | VARCHAR(255) (UNIQUE) | Email de login |
 | senha_hash | VARCHAR(255) | Hash bcrypt da senha |
 | curso_id | INT (FK → Course) | Curso do usuário (NOT NULL) |
-| created_at | DATETIME | Data de criação |
 
 **Subject** — Disciplinas da grade curricular.
 
@@ -201,7 +215,7 @@ erDiagram
 | resumo | TEXT | Resumo dos tópicos |
 | periodo_recomendado | INT | Período sugerido (1 a N) |
 
-**CourseSubjects** — Associação entre curso e disciplina (join table).
+**CourseSubjects** — Associação entre curso e disciplina.
 
 | Coluna | Tipo | Descrição |
 |---|---|---|
