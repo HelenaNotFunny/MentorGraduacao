@@ -1,9 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
+import { useEffect, useState } from "react";
+
 import {GraduationCap, BookOpen, Network } from "lucide-react";
+import { auth } from "../services/auth";
 
 export function Home() {
   const navigate = useNavigate();
+  const [isAdminUser, setIsAdminUser] = useState<boolean>(false);
+  
+    useEffect(() => {
+      if (auth.isAuthenticated()) {
+        auth.me()
+          .then((user) => {
+            setIsAdminUser(user.is_admin); 
+          })
+          .catch(console.error);
+      }
+    }, []);
+  
+    const isAdmin = auth.isAuthenticated() && isAdminUser;
 
   return (
     <div style={styles.container}>
@@ -31,11 +47,13 @@ export function Home() {
         </button>
 
         {/* Card 3: Meu Fluxograma */}
+        {!isAdmin && (
         <button style={styles.card} onClick={() => navigate("/flowchart")}>
           <div style={styles.icon}><Network size={48} color="#3182ce" strokeWidth={1.5} /></div>
           <h3 style={styles.cardTitle}>Meu Fluxograma</h3>
           <p style={styles.cardText}>Visualize sua trajetória e planeje os próximos semestres.</p>
         </button>
+        )};
 
       </div>
     </div>

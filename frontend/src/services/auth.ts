@@ -5,6 +5,7 @@ export interface User {
   nome: string;
   email: string;
   curso_id: number | null;
+  is_admin: boolean;
 }
 
 export interface Token {
