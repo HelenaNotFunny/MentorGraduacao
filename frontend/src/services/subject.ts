@@ -40,5 +40,7 @@ export const subjectService = {
     bibliografia?: string;
     resumo?: string;
     periodo_recomendado?: number;
+    prerequisite_ids: number[];
+    
   }) => api.post<Subject>("/subjects/", data),
 };
