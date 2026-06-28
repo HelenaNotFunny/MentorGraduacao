@@ -1,0 +1,48 @@
+services:
+  mysql:
+    image: dpdck972/mentor-mysql:latest
+    container_name: mentor-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE: MentorGraducao
+      MYSQL_USER: mentor
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mentor123}
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+      - mentor_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "mentor", "-p${MYSQL_PASSWORD:-mentor123}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile 
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" 
+    volumes:
+      - ./frontend:/app 
+      - /app/node_modules 
+    depends_on:
+      - backend
+    command: npm run dev -- --host
+
+volumes:
+  mentor_mysql_data:

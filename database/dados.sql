@@ -1,3 +1,6 @@
+SET NAMES 'utf8mb4';
+USE MentorGraducao;
+
 INSERT INTO Course (nome, instituicao)
 VALUES
 ('Ciência da Computação', 'UFRN'),
