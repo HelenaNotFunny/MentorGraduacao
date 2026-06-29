@@ -124,7 +124,7 @@ export function Courses() {
           <p style={styles.requestText}>Seu curso ainda não está na plataforma?</p>
           <button
             style={styles.requestButton}
-            onClick={() => alert("A ser implementado")}
+            onClick={() => window.open('https://forms.gle/GjaL6PJDxJi2jUuGA', '_blank')}
           >
             Solicitar Adição de Grade
           </button>
