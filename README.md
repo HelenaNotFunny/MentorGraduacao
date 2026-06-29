@@ -59,13 +59,14 @@ MentorGraduacao/
 │   │   ├── routers/                # Endpoints: auth, courses, subjects, flowchart, reviews
 │   │   └── services/               # Lógica de autenticação (bcrypt, JWT)
 │   ├── alembic/                    # Migrations
-│   ├── seeds/seed.py               # Dados de exemplo
+│   ├── tests/                      # Diretório dos testes
+│   ├── Dockerfile                  # Arquivo de Configuração de Build
+│   ├── .env.example                # exemplo do env para configurar o DATABASE_URL
 │   └── requirements.txt
 ├── database/
-│   ├── docker-compose.yml          # MySQL 8.0
-│   ├── schema_mentor_graduacao.sql # Schema do banco de dados
-│   ├── dados.sql                   # Dados iniciais
-│   └── README.md                   # Setup do banco
+│   ├── cria_schema_mentor_graduacao.sql # Schema do banco de dados
+│   ├── dados.sql                        # Dados iniciais
+│   └── README.md                        # Setup do banco
 ├── frontend/
 │   ├── src/
 │   │   ├── components/             # Header, ProtectedRoute
@@ -76,13 +77,21 @@ MentorGraduacao/
 │   │   └── main.tsx                 
 │   ├── index.html                  # HTML base
 │   ├── package.json  
-│   └── vite.config.ts              # Proxy /api → backend
+│   ├── vite.config.ts              # Proxy /api → backend
+│   └── Dockerfile                  # Arquivo de Configuração de Build
 ├── READ.md                         # Especificações do projeto, incluindo como rodar
 ├── userStories.md                  # Requisitos funcionais
+├── docker-compose.yml              # Gerencia dos container
 └── .gitignore
 ```
 
 ## Como rodar
+
+### Projeto completo via Docker
+
+```bash
+docker compose up --build
+```
 
 ### Banco de dados (MySQL via Docker)
 

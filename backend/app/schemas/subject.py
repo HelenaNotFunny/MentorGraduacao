@@ -17,6 +17,7 @@ class SubjectCreate(BaseModel):
     periodo_recomendado: int | None = None
 
     course_ids: list[int]
+    prerequisite_ids: list[int] = []
 
 class CourseRef(BaseModel):
     id: int
@@ -35,6 +36,6 @@ class SubjectOut(BaseModel):
 
     prerequisitos: list[PrerequisiteOut] = []
 
-    cursos: list[CourseRef] = []
+    courses: list[CourseRef] = []
 
     model_config = {"from_attributes": True}

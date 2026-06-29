@@ -9,17 +9,32 @@ export function Subjects() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [isAdminUser, setIsAdminUser] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (auth.isAuthenticated()) {
+      auth.me()
+        .then((user) => {
+          setIsAdminUser(user.is_admin); 
+        })
+        .catch(console.error);
+    }
+  }, []);
+
+  const isAdmin = auth.isAuthenticated() && isAdminUser;
+
   useEffect(() => {
     setLoading(true);
     subjectService
       .list({ search: search || undefined })
-      .then(setSubjects)
+      .then((response) => {
+        
+        setSubjects(response);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [search]);
-
-  const isAdmin = auth.isAuthenticated();
-
+  }, [search, isAdminUser]); 
+  
   return (
     <div style={styles.container}>
       <div style={styles.header}>

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,computed_field
 
 
 class UserRegister(BaseModel):
@@ -25,3 +25,8 @@ class UserOut(BaseModel):
     curso_id: int
 
     model_config = {"from_attributes": True}
+
+    @computed_field
+    @property
+    def is_admin(self) -> bool:
+        return self.email == "admin@test.com"

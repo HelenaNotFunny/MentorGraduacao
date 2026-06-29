@@ -19,6 +19,7 @@ CREATE TABLE User (
     email VARCHAR(255) NOT NULL UNIQUE,
     senha_hash VARCHAR(255) NOT NULL,
     curso_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_user_course
         FOREIGN KEY (curso_id)

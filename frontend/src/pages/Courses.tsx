@@ -1,92 +1,42 @@
-// import { FormEvent, useEffect, useState } from "react";
-// import { Course, courseService } from "../services/course";
-
-// export function Courses() {
-//   const [courses, setCourses] = useState<Course[]>([]);
-//   const [nome, setNome] = useState("");
-//   const [instituicao, setInstituicao] = useState("");
-
-//   useEffect(() => {
-//     courseService.list().then(setCourses).catch(console.error);
-//   }, []);
-
-//   async function handleCreate(e: FormEvent) {
-//     e.preventDefault();
-//     const course = await courseService.create({ nome, instituicao });
-//     setCourses((prev) => [...prev, course]);
-//     setNome("");
-//     setInstituicao("");
-//   }
-
-//   return (
-//     <div style={styles.container}>
-//       <h2>Cursos</h2>
-
-//       <form onSubmit={handleCreate} style={styles.form}>
-//         <input
-//           placeholder="Nome do curso"
-//           value={nome}
-//           onChange={(e) => setNome(e.target.value)}
-//           required
-//           style={styles.input}
-//         />
-//         <input
-//           placeholder="Instituição"
-//           value={instituicao}
-//           onChange={(e) => setInstituicao(e.target.value)}
-//           required
-//           style={styles.input}
-//         />
-//         <button type="submit" style={styles.button}>
-//           Cadastrar Curso
-//         </button>
-//       </form>
-
-//       <ul style={styles.list}>
-//         {courses.map((c) => (
-//           <li key={c.id} style={styles.listItem}>
-//             <strong>{c.nome}</strong> — {c.instituicao}
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// const styles: Record<string, React.CSSProperties> = {
-//   container: { maxWidth: 600, margin: "2rem auto", padding: "0 1rem" },
-//   form: { display: "flex", gap: "0.5rem", marginBottom: "1.5rem" },
-//   input: {
-//     flex: 1,
-//     padding: "0.5rem",
-//     border: "1px solid #ccc",
-//     borderRadius: 4,
-//     fontSize: "1rem",
-//   },
-//   button: {
-//     padding: "0.5rem 1rem",
-//     background: "#1a73e8",
-//     color: "#fff",
-//     border: "none",
-//     borderRadius: 4,
-//     cursor: "pointer",
-//     fontWeight: 600,
-//   },
-//   list: { listStyle: "none", padding: 0 },
-//   listItem: { padding: "0.5rem 0", borderBottom: "1px solid #eee" },
-// };
-
-
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, BookMarked, Info } from "lucide-react";
-
 import { Course, courseService } from "../services/course";
+import { auth } from "../services/auth";
 
 export function Courses() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [nome, setNome] = useState("");
+  const [instituicao, setInstituicao] = useState("");
+
+  const [isAdminUser, setIsAdminUser] = useState<boolean>(false);
+  
+  useEffect(() => {
+    if (auth.isAuthenticated()) {
+      auth.me()
+        .then((user) => {
+          setIsAdminUser(user.is_admin); 
+        })
+        .catch(console.error);
+    }
+  }, []);
+
+  const isAdmin = auth.isAuthenticated() && isAdminUser;
+
+  async function handleCreate(e: FormEvent) {
+    e.preventDefault();
+    try {
+      const course = await courseService.create({ nome, instituicao });
+      setCourses((prev) => [...prev, course]);
+      setNome("");
+      setInstituicao("");
+    } catch (error) {
+      console.error("Erro ao criar curso:", error);
+    }
+  }
 
   useEffect(() => {
     courseService.list().then(setCourses).catch(console.error);
@@ -100,13 +50,37 @@ export function Courses() {
   return (
     <div style={styles.container}>
       <header style={styles.header}>
+        {isAdmin && (
+          <>
+            <h2 style={styles.title}>Cadastrar Curso</h2>
+            <form onSubmit={handleCreate} style={styles.form}>
+              <input
+                placeholder="Nome do curso"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                required
+                style={styles.input}
+              />
+              <input
+                placeholder="Instituição"
+                value={instituicao}
+                onChange={(e) => setInstituicao(e.target.value)}
+                required
+                style={styles.input}
+              />
+              <button type="submit" style={styles.button}>
+                Cadastrar Curso
+              </button>
+            </form>
+          </>
+        )}
+
         <h2 style={styles.title}>Cursos Disponíveis</h2>
         <p style={styles.subtitle}>
           Pesquise o seu curso para visualizar e planejar a grade curricular.
         </p>
       </header>
 
-      {/*barra de pesquisa */}
       <div style={styles.searchSection}>
         <div style={styles.searchWrapper}>
           <Search style={styles.searchIcon} size={20} />
@@ -120,7 +94,7 @@ export function Courses() {
         </div>
       </div>
 
-      {/*lista de cursos */}
+      {/* lista de cursos */}
       <div style={styles.courseList}>
         {filteredCourses.length > 0 ? (
           filteredCourses.map((course) => (
@@ -145,15 +119,17 @@ export function Courses() {
       </div>
 
       {/* solicitação de cursos */}
-      <div style={styles.requestSection}>
-        <p style={styles.requestText}>Seu curso ainda não está na plataforma?</p>
-        <button
-          style={styles.requestButton}
-          onClick={() => alert("A ser implementado")}
-        >
-          Solicitar Adição de Grade
-        </button>
-      </div>
+      {!isAdmin && (
+        <div style={styles.requestSection}>
+          <p style={styles.requestText}>Seu curso ainda não está na plataforma?</p>
+          <button
+            style={styles.requestButton}
+            onClick={() => window.open('https://forms.gle/GjaL6PJDxJi2jUuGA', '_blank')}
+          >
+            Solicitar Adição de Grade
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -178,6 +154,21 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "1rem",
     color: "#718096",
     margin: 0,
+  },
+  form: {
+    display: "flex",
+    gap: "1rem",
+    marginBottom: "2rem",
+    flexWrap: "wrap",
+  },
+  input: {
+    padding: "0.5rem 1rem",
+    fontSize: "1rem",
+    border: "1px solid #ccc",
+    borderRadius: "6px",
+    flex: 1,
+    minWidth: "200px",
+    fontFamily: "'Roboto Mono', monospace",
   },
   searchSection: {
     marginBottom: "2.5rem",
@@ -266,5 +257,15 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     fontFamily: "'Roboto Mono', monospace",
     transition: "all 0.2s",
+  },
+  button: {
+    padding: "0.5rem 1rem",
+    background: "#1a73e8",
+    color: "#fff",
+    border: "none",
+    borderRadius: 4,
+    cursor: "pointer",
+    fontWeight: 600,
+    fontFamily: "'Roboto Mono', monospace",
   },
 };
